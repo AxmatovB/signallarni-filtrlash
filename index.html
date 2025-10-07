@@ -219,7 +219,6 @@
         <h1>🎤 Ovoz Yozish va FIR Filtrlash</h1>
         <p class="subtitle">Ovoz yozing, tinglang va turli FIR filtrlar bilan qayta ishlang</p>
 
-        <!-- 1. YOZISH BO'LIMI -->
         <div class="section">
             <div class="section-title">📝 1. Ovoz Yozish</div>
             
@@ -241,7 +240,6 @@
             </div>
         </div>
 
-        <!-- 2. FILTRLASH BO'LIMI -->
         <div class="section" id="filterSection" style="display: none;">
             <div class="section-title">🔧 2. FIR Filtr Sozlamalari</div>
 
@@ -290,7 +288,6 @@
             <div class="status" id="filterStatus">⏳ Filtr parametrlarini tanlang...</div>
         </div>
 
-        <!-- 3. NATIJALAR BO'LIMI -->
         <div class="section results" id="resultsSection">
             <div class="section-title">📊 3. Natijalar va Taqqoslash</div>
 
@@ -346,7 +343,6 @@
             }
         });
 
-        // Yozishni boshlash
         startBtn.addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -378,7 +374,6 @@
             }
         });
 
-        // Yozishni to'xtatish
         stopBtn.addEventListener('click', () => {
             mediaRecorder.stop();
             mediaRecorder.stream.getTracks().forEach(track => track.stop());
@@ -386,7 +381,6 @@
             stopBtn.disabled = true;
         });
 
-        // Audio ma'lumotlarini yuklash
         async function loadAudioData() {
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -399,7 +393,6 @@
             }
         }
 
-        // FIR filtr dizayni
         function designFIRFilter(order, cutoff, cutoff2, type, method, sr) {
             const M = order;
             const filter = new Array(M).fill(0);
@@ -431,7 +424,6 @@
                     }
                 }
                 
-                // Turli oynalar
                 if (method === 'leastsquares' || method === 'constrained') {
                     filter[n] *= 0.42 - 0.5 * Math.cos(2 * Math.PI * n / (M - 1)) + 
                                   0.08 * Math.cos(4 * Math.PI * n / (M - 1));
@@ -448,7 +440,6 @@
             return filter;
         }
 
-        // Konvolyutsiya
         function convolve(signal, filter) {
             const output = new Float32Array(signal.length);
             for (let i = 0; i < signal.length; i++) {
@@ -464,7 +455,6 @@
             return output;
         }
 
-        // Filtrni qo'llash
         applyFilterBtn.addEventListener('click', () => {
             if (!originalAudioData) {
                 filterStatus.textContent = '❌ Avval ovoz yozing!';
@@ -495,7 +485,6 @@
             }, 100);
         });
 
-        // Natijalarni ko'rsatish
         function displayResults(original, filtered) {
             resultsSection.classList.add('active');
             createAudioFromData(original, 'originalAudio');
@@ -504,7 +493,6 @@
             drawSpectrum(original, filtered);
         }
 
-        // Audio yaratish
         function createAudioFromData(data, elementId) {
             const buffer = audioContext.createBuffer(1, data.length, sampleRate);
             buffer.copyToChannel(data, 0);
@@ -523,7 +511,6 @@
             });
         }
 
-        // WAV formatga o'girish
         function audioBufferToWav(buffer) {
             const length = buffer.length * buffer.numberOfChannels * 2;
             const wav = new ArrayBuffer(44 + length);
@@ -560,7 +547,6 @@
             return wav;
         }
 
-        // Vaqt grafigi
         function drawWaveform(original, filtered) {
             const canvas = document.getElementById('waveformChart');
             const ctx = canvas.getContext('2d');
@@ -621,7 +607,6 @@
             });
         }
 
-        // Spektr grafigi
         function drawSpectrum(original, filtered) {
             const canvas = document.getElementById('spectrumChart');
             const ctx = canvas.getContext('2d');
@@ -687,7 +672,6 @@
             });
         }
 
-        // FFT hisoblash
         function computeFFT(data) {
             const n = data.length;
             const magnitude = new Array(n).fill(0);
@@ -705,7 +689,6 @@
             return magnitude;
         }
 
-        // Qayta sinash
         resetBtn.addEventListener('click', () => {
             audioChunks = [];
             audioBlob = null;
